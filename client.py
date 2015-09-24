@@ -9,43 +9,55 @@ class ConnectWindow(Gtk.Window):
     def __init__(self):
         self.connectServer()
         self.store = Gtk.ListStore(int, str)
-        for i in range(5):
+        
+        # Generate default channel | TO_REMOVE
+        for i in range(40):
             name = "Channel #%d" % i
             self.store.append([i, name])
 
+        # Use GTK for create a window
         self.builder = Gtk.Builder()
         self.builder.add_from_file("glade/connect_create.glade")
         self.window = self.builder.get_object("connect_create")
         self.scroll = self.builder.get_object("scrolledwindow")
+
+        # Create a trewView
         self.list = Gtk.TreeView(self.store)
         
+        # Create column Channel Id
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Channel Id", renderer, text=0)
         self.list.append_column(column)
 
+        # Create column Name
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Name", renderer, text=1)
         self.list.append_column(column)
 
+        # Find the Gtk.TreeSelection object, and execute on_tree_selection_changed method
+        select = self.list.get_selection()
+        select.connect("changed", self.on_tree_selection_changed)
+
+        # Add scroll
         self.scroll.add(self.list);
         self.scroll.set_min_content_width(400)
-        self.scroll.set_min_content_height(400)
-        # for i in range(5):
-        #     buffer = "ListItemContainer with Label #%d" % i
-        #     self.populateChannel(buffer)
-
-        # for row in self.store:
-        #     # Print values of all columns
-            # self.populateChannel(row[:])
+        self.scroll.set_min_content_height(325)
 
         handlers = {
             "onDeleteWindow": Gtk.main_quit,
+            "onClickBtnConnect": self.connectBtn,
             }
         self.builder.connect_signals(handlers)
         self.window.show_all()
 
+    def on_tree_selection_changed(self, selection):
+        model, treeiter = selection.get_selected()
+        if treeiter != None:
+            print("You selected : " + str(model[treeiter][0]) + " -> " + str(model[treeiter][1]))
+            self.channel_selected = treeiter
+
     def connectBtn(self, widget):
-        self.builder.get_object("label_channel").set_text('Vous avez cliqué !')
+        print("Connection to : " + str(self.store[self.channel_selected][0]) + " -> " + str(self.store[self.channel_selected][1]))
 
     def populateListChannel(self, content):
         label = Gtk.Label(content)
