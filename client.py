@@ -46,6 +46,7 @@ class ConnectWindow(Gtk.Window):
         handlers = {
             "onDeleteWindow": Gtk.main_quit,
             "onClickBtnConnect": self.connectBtn,
+            "onClickCreateChannelt": self.createChannel,
             }
         self.builder.connect_signals(handlers)
         self.window.show_all()
@@ -58,6 +59,10 @@ class ConnectWindow(Gtk.Window):
 
     def connectBtn(self, widget):
         print("Connection to : " + str(self.store[self.channel_selected][0]) + " -> " + str(self.store[self.channel_selected][1]))
+
+    def createChannel(self):
+        channel_name = self.builder.get_object("create_input").get_text()
+        self.store.append([len(self.store) + 1, channel_name])
 
     def populateListChannel(self, content):
         label = Gtk.Label(content)

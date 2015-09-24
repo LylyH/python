@@ -119,6 +119,7 @@ avec le formulaire ci-dessous.</property>
                 <property name="margin_right">10</property>
                 <property name="margin_top">8</property>
                 <property name="margin_bottom">10</property>
+                <signal name="clicked" handler="onClickCreateChannel" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
